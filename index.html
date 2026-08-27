@@ -20,7 +20,7 @@ function markWeak(){const c=currentCard();if(!c)return;uniquePush(state.weakIds,
 function markLearned(){const c=currentCard();if(!c)return;uniquePush(state.learnedIds,c.id);removeValue(state.weakIds,c.id);nextCard();}
 function toggleAnswer(){state.showAnswer=!state.showAnswer;save();render();}
 function shuffleCurrent(){const ids=visibleCards().map(c=>c.id);for(let i=ids.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ids[i],ids[j]]=[ids[j],ids[i]];}state.order=ids;state.index=0;state.showAnswer=false;save();render();}
-function resetCurrentOrder(){state.order=visibleCards().map(c=>c.id);state.index=0;state.showAnswer=false;save();render();}
+function resetCurrentOrder(){let base=baseCards();if(state.weakOnly){const weak=new Set(state.weakIds);base=base.filter(c=>weak.has(c.id));}state.order=base.map(c=>c.id);state.index=0;state.showAnswer=false;save();render();}
 function clearWeak(){if(!confirm('『覚えていない』の記録を消しますか？'))return;state.weakIds=[];if(state.weakOnly)state.index=0;save();render();}
 function clearAll(){if(!confirm('覚えた・覚えていない・順番など、すべての記録をリセットしますか？'))return;state.category='all';state.weakOnly=false;state.weakIds=[];state.learnedIds=[];state.order=ALL_CARDS.map(c=>c.id);state.index=0;state.showAnswer=false;save();render();}
 function modeText(){const cat=state.category==='all'?'全部':state.category==='geo'?'地理':'歴史';return state.weakOnly?`モード：${cat} / 覚えていないだけ`:`モード：${cat}`;}
